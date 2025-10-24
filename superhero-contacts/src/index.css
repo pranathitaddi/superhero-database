@@ -1,0 +1,138 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap");
+@import "tailwindcss";
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+body {
+  font-family: "Share Tech Mono", monospace;
+  background-color: #050712;
+  color: #00ffc6;
+  overflow-x: hidden;
+  letter-spacing: 0.05em;
+  transition: background 0.3s ease;
+}
+
+/* Subtle grid background (no heavy CRT lines) */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 255, 198, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 198, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center;
+}
+
+/* Minimal scanline shimmer (very subtle) */
+.scanline {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 198, 0.02) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  animation: scan 6s linear infinite;
+  z-index: 9999;
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Refined glitch: crisp + minimal */
+@keyframes glitch {
+  0%, 100% {
+    text-shadow:
+      0.03em 0 rgba(255, 0, 128, 0.6),
+      -0.03em 0 rgba(0, 255, 255, 0.6);
+  }
+  50% {
+    text-shadow:
+      -0.03em 0 rgba(255, 0, 128, 0.6),
+      0.03em 0 rgba(0, 255, 255, 0.6);
+  }
+}
+
+.glitch {
+  animation: glitch 1.5s infinite;
+}
+
+/* Futuristic gradient animation */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background: linear-gradient(90deg, #00ffc6, #00ffff, #0080ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s linear infinite;
+}
+
+/* Smooth element reveals */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+/* Subtle glowing borders and focus rings */
+.border-glow {
+  border: 1px solid rgba(0, 255, 198, 0.4);
+  box-shadow: 0 0 10px rgba(0, 255, 198, 0.15);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.border-glow:hover,
+.border-glow:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* Modern minimal scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ffc6, #00ffff);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00ffff, #00ffc6);
+}
+
+/* Smooth selection highlight */
+::selection {
+  background: rgba(0, 255, 198, 0.2);
+  color: #00ffc6;
+}
