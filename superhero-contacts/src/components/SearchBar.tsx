@@ -1,7 +1,17 @@
 import React from "react";
-import { Search, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
-const SearchBar = ({ searchTerm, onSearchChange, onAddClick }) => {
+interface SearchBarProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  onAddClick: () => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearchChange, onAddClick }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    onSearchChange(e.target.value);
+  };
+
   return (
     <div className="w-full space-y-10 font-mono">
       {/* Search Bar Row */}
@@ -11,7 +21,7 @@ const SearchBar = ({ searchTerm, onSearchChange, onAddClick }) => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={handleInputChange}
             placeholder="SEARCH DATABASE..."
             className="
               w-full
@@ -32,6 +42,7 @@ const SearchBar = ({ searchTerm, onSearchChange, onAddClick }) => {
               tracking-wider
             "
           />
+          {/* Search Icon (commented out) */}
           {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
             <Search 
               className="w-5 h-5 text-[#00ffc6]/60 group-focus-within:text-[#00ffff] group-focus-within:drop-shadow-[0_0_8px_rgba(0,255,255,0.8)] transition-all duration-300" 
@@ -73,9 +84,18 @@ const SearchBar = ({ searchTerm, onSearchChange, onAddClick }) => {
       {searchTerm && (
         <div className="flex items-center gap-3 text-sm text-[#00ffc6] px-1 animate-fadeInUp">
           <div className="flex gap-1.5">
-            <span className="w-2 h-2 bg-[#00ffc6] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,198,0.8)]" style={{ animationDelay: '0ms' }}></span>
-            <span className="w-2 h-2 bg-[#00ffff] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,255,0.8)]" style={{ animationDelay: '150ms' }}></span>
-            <span className="w-2 h-2 bg-[#0080ff] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,128,255,0.8)]" style={{ animationDelay: '300ms' }}></span>
+            <span 
+              className="w-2 h-2 bg-[#00ffc6] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,198,0.8)]" 
+              style={{ animationDelay: '0ms' }} 
+            />
+            <span 
+              className="w-2 h-2 bg-[#00ffff] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,255,0.8)]" 
+              style={{ animationDelay: '150ms' }} 
+            />
+            <span 
+              className="w-2 h-2 bg-[#0080ff] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,128,255,0.8)]" 
+              style={{ animationDelay: '300ms' }} 
+            />
           </div>
           <span className="tracking-wider font-mono animate-gradient bg-gradient-to-r from-[#00ffc6] via-[#00ffff] to-[#0080ff] bg-[length:200%_auto] bg-clip-text text-transparent">
             SEARCHING DATABASE...

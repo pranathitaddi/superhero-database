@@ -1,6 +1,17 @@
 import React, { useEffect } from "react";
+import type { Hero } from "../services/api";
 
-const ContactModal = ({ hero, onClose }) => {
+interface ContactModalProps {
+  hero: Hero | null;
+  onClose: () => void;
+}
+
+interface StatBarProps {
+  label: string;
+  value: string | number;
+}
+
+const ContactModal: React.FC<ContactModalProps> = ({ hero, onClose }) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -9,7 +20,7 @@ const ContactModal = ({ hero, onClose }) => {
   }, []);
 
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
@@ -19,10 +30,8 @@ const ContactModal = ({ hero, onClose }) => {
     return () => document.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
-  if (!hero) return null;
-
-  const StatBar = ({ label, value }) => {
-    const numValue = parseInt(value) || 0;
+  const StatBar: React.FC<StatBarProps> = ({ label, value }) => {
+    const numValue = parseInt(value.toString()) || 0;
     const barColor =
       numValue >= 80
         ? "bg-red-500"
@@ -47,6 +56,12 @@ const ContactModal = ({ hero, onClose }) => {
       </div>
     );
   };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+    e.currentTarget.src = "https://via.placeholder.com/400x600?text=NO+IMAGE";
+  };
+
+  if (!hero) return null;
 
   return (
     <div
@@ -101,10 +116,7 @@ const ContactModal = ({ hero, onClose }) => {
                       }
                       alt={hero.name}
                       className="w-full h-auto"
-                      onError={(e) => {
-                        e.target.src =
-                          "https://via.placeholder.com/400x600?text=NO+IMAGE";
-                      }}
+                      onError={handleImageError}
                     />
                   </div>
 
@@ -211,16 +223,28 @@ const ContactModal = ({ hero, onClose }) => {
               <div className="grid sm:grid-cols-2 gap-4">
                 <StatBar
                   label="Intelligence"
-                  value={hero.powerstats?.intelligence}
+                  value={hero.powerstats?.intelligence || "N/A"}
                 />
-                <StatBar label="Strength" value={hero.powerstats?.strength} />
-                <StatBar label="Speed" value={hero.powerstats?.speed} />
+                <StatBar 
+                  label="Strength" 
+                  value={hero.powerstats?.strength || "N/A"} 
+                />
+                <StatBar 
+                  label="Speed" 
+                  value={hero.powerstats?.speed || "N/A"} 
+                />
                 <StatBar
                   label="Durability"
-                  value={hero.powerstats?.durability}
+                  value={hero.powerstats?.durability || "N/A"}
                 />
-                <StatBar label="Power" value={hero.powerstats?.power} />
-                <StatBar label="Combat" value={hero.powerstats?.combat} />
+                <StatBar 
+                  label="Power" 
+                  value={hero.powerstats?.power || "N/A"} 
+                />
+                <StatBar 
+                  label="Combat" 
+                  value={hero.powerstats?.combat || "N/A"} 
+                />
               </div>
             </div>
 

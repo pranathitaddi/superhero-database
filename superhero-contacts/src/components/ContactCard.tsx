@@ -1,8 +1,14 @@
 import React from "react";
+import type { Hero } from "../services/api.ts";
 
-const ContactCard = ({ hero, onClick }) => {
+interface ContactCardProps {
+  hero: Hero;
+  onClick?: (hero: Hero) => void;
+}
+
+const ContactCard: React.FC<ContactCardProps> = ({ hero, onClick }) => {
   // Determine main power
-  const getMainPower = () => {
+  const getMainPower = (): string => {
     const stats = hero.powerstats;
     if (!stats) return "Unknown";
 
@@ -16,14 +22,18 @@ const ContactCard = ({ hero, onClick }) => {
     };
 
     const highest = Object.entries(powers).reduce((a, b) =>
-      parseInt(a[1] || 0) > parseInt(b[1] || 0) ? a : b
+      parseInt(a[1]?.toString() || "0") > parseInt(b[1]?.toString() || "0") ? a : b
     );
 
     return highest[0].charAt(0).toUpperCase() + highest[0].slice(1);
   };
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     if (onClick) onClick(hero);
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>): void => {
+    e.currentTarget.src = "https://via.placeholder.com/150?text=NO+IMAGE";
   };
 
   return (
@@ -52,9 +62,7 @@ const ContactCard = ({ hero, onClick }) => {
               }
               alt={hero.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              onError={(e) => {
-                e.target.src = "https://via.placeholder.com/150?text=NO+IMAGE";
-              }}
+              onError={handleImageError}
             />
           </div>
         </div>

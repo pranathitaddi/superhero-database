@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const Header = () => {
+const Header: React.FC   = () => {
   const [time, setTime] = useState("");
 
   useEffect(() => {

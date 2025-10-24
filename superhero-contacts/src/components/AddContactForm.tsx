@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { searchHeroes } from "../services/api";
+import type { KeyboardEvent, ChangeEvent, SyntheticEvent } from "react";
+import { searchHeroes, type Hero } from "../services/api";
 
-const AddContactForm = ({ onClose, onAdd }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
+interface AddContactFormProps {
+  onClose: () => void;
+  onAdd: (hero: Hero) => void;
+}
+
+const AddContactForm: React.FC<AddContactFormProps> = ({ onClose, onAdd }) => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<Hero[]>([]);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -14,17 +20,17 @@ const AddContactForm = ({ onClose, onAdd }) => {
   }, []);
 
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleEscape as unknown as EventListener);
+    return () => document.removeEventListener("keydown", handleEscape as unknown as EventListener);
   }, [onClose]);
 
-  const handleSearch = async () => {
+  const handleSearch = async (): Promise<void> => {
     if (!searchTerm.trim()) return;
 
     setIsSearching(true);
@@ -33,15 +39,23 @@ const AddContactForm = ({ onClose, onAdd }) => {
     setIsSearching(false);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  const handleAddHero = (hero) => {
+  const handleAddHero = (hero: Hero): void => {
     onAdd(hero);
     onClose();
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>): void => {
+    e.currentTarget.src = "https://via.placeholder.com/80x120?text=NO+IMAGE";
   };
 
   return (
@@ -80,7 +94,7 @@ const AddContactForm = ({ onClose, onAdd }) => {
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleInputChange}
                 onKeyPress={handleKeyPress}
                 placeholder="Enter superhero name..."
                 className="flex-1 bg-gov-blue/50 border-2 border-gov-cyan text-gov-green px-3 sm:px-4 py-2 sm:py-3 font-mono text-sm sm:text-base focus:outline-none focus:border-gov-green focus:shadow-[0_0_20px_rgba(0,255,65,0.5)] transition-all"
@@ -124,10 +138,7 @@ const AddContactForm = ({ onClose, onAdd }) => {
                         }
                         alt={hero.name}
                         className="w-16 h-24 sm:w-20 sm:h-30 object-cover border border-gov-cyan/50 flex-shrink-0"
-                        onError={(e) => {
-                          e.target.src =
-                            "https://via.placeholder.com/80x120?text=NO+IMAGE";
-                        }}
+                        onError={handleImageError}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="text-gov-cyan font-bold mb-1 text-sm sm:text-base truncate">

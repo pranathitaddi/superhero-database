@@ -4,25 +4,22 @@ import SearchBar from "./components/SearchBar";
 import ContactCard from "./components/ContactCard";
 import ContactModal from "./components/ContactModal";
 import AddContactForm from "./components/AddContactForm";
-import { fetchDefaultHeroes, searchHeroes } from "./services/api";
+import { fetchDefaultHeroes, searchHeroes, type Hero } from "./services/api";
 import "./App.css";
 
 function App() {
-  const [defaultHeroes, setDefaultHeroes] = useState([]);
-  const [displayedHeroes, setDisplayedHeroes] = useState([]);
-  const [selectedHero, setSelectedHero] = useState(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [defaultHeroes, setDefaultHeroes] = useState<Hero[]>([]);
+  const [displayedHeroes, setDisplayedHeroes] = useState<Hero[]>([]);
+  const [selectedHero, setSelectedHero] = useState<Hero | null>(null);
+  const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // -------------------------------
-  // Load default heroes on mount
-  // -------------------------------
   useEffect(() => {
     loadDefaultHeroes();
   }, []);
 
-  const loadDefaultHeroes = async () => {
+  const loadDefaultHeroes = async (): Promise<void> => {
     setIsLoading(true);
     const heroes = await fetchDefaultHeroes();
     setDefaultHeroes(heroes);
@@ -30,17 +27,13 @@ function App() {
     setIsLoading(false);
   };
 
-  // -------------------------------
-  // Handle search (with debounce)
-  // -------------------------------
   useEffect(() => {
-    const performSearch = async () => {
+    const performSearch = async (): Promise<void> => {
       if (!searchTerm.trim()) {
         setDisplayedHeroes(defaultHeroes);
         return;
       }
 
-      // Search locally first
       const localResults = defaultHeroes.filter(
         (hero) =>
           hero.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,7 +45,6 @@ function App() {
       if (localResults.length > 0) {
         setDisplayedHeroes(localResults);
       } else {
-        // Fetch from API if not found locally
         setIsLoading(true);
         const apiResults = await searchHeroes(searchTerm);
         setDisplayedHeroes(apiResults);
@@ -64,10 +56,7 @@ function App() {
     return () => clearTimeout(debounce);
   }, [searchTerm, defaultHeroes]);
 
-  // -------------------------------
-  // Add new hero to list
-  // -------------------------------
-  const handleAddHero = (hero) => {
+  const handleAddHero = (hero: Hero): void => {
     if (!defaultHeroes.find((h) => h.id === hero.id)) {
       const updatedHeroes = [...defaultHeroes, hero];
       setDefaultHeroes(updatedHeroes);
@@ -75,15 +64,10 @@ function App() {
     }
   };
 
-  // -------------------------------
-  // UI
-  // -------------------------------
   return (
     <div className="min-h-screen bg-gov-dark relative overflow-hidden">
-      {/* 🔹 Scanline overlay */}
       <div className="scanline" />
 
-      {/* 🔹 Main Content */}
       <div className="flex flex-col items-center pb-32">
         <Header />
 
@@ -97,7 +81,6 @@ function App() {
           <div className="py-8 flex justify-center">
             <div className="w-[80%]">
               {isLoading ? (
-                // Loading State
                 <div className="flex items-center justify-center py-20">
                   <div className="text-center">
                     <div className="text-3xl font-orbitron text-gov-cyan mb-4 animate-blink">
@@ -109,7 +92,6 @@ function App() {
                   </div>
                 </div>
               ) : displayedHeroes.length === 0 ? (
-                // No Results
                 <div className="flex items-center justify-center py-20">
                   <div className="text-center border-2 border-gov-cyan/30 p-12 rounded-xl">
                     <div className="text-2xl font-orbitron text-gov-cyan mb-4">
@@ -123,20 +105,17 @@ function App() {
                   </div>
                 </div>
               ) : (
-                // Results
                 <>
-                  {/* Search Info */}
                   <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
                     {searchTerm && (
-  <div className="text-gov-green font-mono text-sm sm:text-base">
-    <span className="text-gov-cyan font-bold">
-      {displayedHeroes.length}
-    </span>{" "}
-    SUBJECT
-    {displayedHeroes.length !== 1 ? "S" : ""} FOUND
-  </div>
-)}
-
+                      <div className="text-gov-green font-mono text-sm sm:text-base">
+                        <span className="text-gov-cyan font-bold">
+                          {displayedHeroes.length}
+                        </span>{" "}
+                        SUBJECT
+                        {displayedHeroes.length !== 1 ? "S" : ""} FOUND
+                      </div>
+                    )}
 
                     {searchTerm && (
                       <button
@@ -148,7 +127,6 @@ function App() {
                     )}
                   </div>
 
-                  {/* Watchlist Count */}
                   {!searchTerm && (
                     <div className="text-gov-green font-mono text-sm sm:text-base mb-4">
                       <span className="text-gov-cyan font-bold">
@@ -159,7 +137,6 @@ function App() {
                     </div>
                   )}
 
-                  {/* Cards */}
                   <div className="flex flex-wrap justify-center gap-6">
                     {displayedHeroes.map((hero) => (
                       <div
@@ -177,14 +154,8 @@ function App() {
         </div>
       </div>
 
-      {/* 🔹 Footer (Full-width line + Info) */}
       <footer
-        className="
-          fixed bottom-0 left-0 w-full 
-          border-t border-gov-cyan/70 
-          bg-gov-blue/70 backdrop-blur-md 
-          shadow-inner z-50
-        "
+        className="fixed bottom-0 left-0 w-full border-t border-gov-cyan/70 bg-gov-blue/70 backdrop-blur-md shadow-inner z-50"
         role="contentinfo"
         aria-label="Superhero Database Footer"
       >
@@ -192,7 +163,6 @@ function App() {
 
         <div className="flex justify-center py-4 sm:py-5">
           <div className="w-[80vw] sm:w-[85vw] lg:w-[70vw] flex items-center justify-between gap-6">
-            {/* Left side */}
             <div className="font-mono text-left">
               <p className="text-sm sm:text-base text-gov-green">
                 <span className="hidden sm:inline">SYSTEM STATUS: </span>
@@ -205,7 +175,6 @@ function App() {
               </p>
             </div>
 
-            {/* Right side */}
             <div className="text-right font-mono text-gov-green/50 text-xs sm:text-sm">
               SUPERHERO DATABASE v2.0
             </div>
@@ -213,7 +182,6 @@ function App() {
         </div>
       </footer>
 
-      {/* 🔹 Modals */}
       {selectedHero && (
         <ContactModal hero={selectedHero} onClose={() => setSelectedHero(null)} />
       )}
