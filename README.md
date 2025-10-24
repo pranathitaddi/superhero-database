@@ -29,7 +29,7 @@ git clone <YOUR_REPO_URL>
 2. **Navigate to the project directory:**
 
 ```bash
-cd <PROJECT_DIRECTORY>
+cd superhero-contacts
 ```
 
 3. **Install dependencies:**
