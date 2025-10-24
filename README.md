@@ -65,7 +65,7 @@ npm run dev
 - **Lucide React**: For sleek, modern icons.
 - **SuperHero API**: Provides real-time superhero data for the app.
 
-[Live Demo](YOUR_DEPLOYED_APP_URL)
+[Live Demo](https://vercel.com/pranathitaddigmailcoms-projects/superhero-database-32tv/7Hnqeap5PtpuSobpqPsTGB3eXDzK)
 
 ---
 
